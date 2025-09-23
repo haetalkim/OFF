@@ -1,30 +1,28 @@
 
-// ChatGPT ZONE**: MAXPAGES = 5. Page 1 is FIXED, Pages 2-5 start as "ADD NEW"
-// FINAL CHECK DONE 11:32!!!!!!!!!! LETSGOOOOOOOOO
-
-
 let currentPage = 0;
-const ON_IMAGE_URL = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F273aU%2FbtsLjtvKXgO%2FQkuo2wpEHwVrc7pzxa3fD0%2Fimg.png";
-const OFF_IMAGE_URL = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FA91wN%2FbtsLjE423Yk%2Fx6kWSD6CxBFtKaaCGKgaCK%2Fimg.png";
+const ON_IMAGE_URL =
+  "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F273aU%2FbtsLjtvKXgO%2FQkuo2wpEHwVrc7pzxa3fD0%2Fimg.png"; 
+const OFF_IMAGE_URL =
+  "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FA91wN%2FbtsLjE423Yk%2Fx6kWSD6CxBFtKaaCGKgaCK%2Fimg.png"; // OFF Image
 
 document.addEventListener("DOMContentLoaded", () => {
   const maxPages = 5;
 
+  // Track task states
   const taskStates = {
     labels: new Array(maxPages).fill(null),
     proofs: new Array(maxPages).fill(null),
     uploadDates: new Array(maxPages).fill(null),
-    themes: new Array(maxPages).fill("light") // ChatGPT:Keeping the Default light mode 
+    themes: new Array(maxPages).fill("light") // page theme (light or dark)
   };
 
- // @ELEMENTS
   const resetButton = document.getElementById("reset-button");
   const navigationDots = document.querySelectorAll("#navigation-dots .dot");
   const leftArrow = document.getElementById("left-arrow");
   const rightArrow = document.getElementById("right-arrow");
   const slider = document.getElementById("slider");
+  const taskList = document.getElementById("task-list");
 
-  // @EVENT-LISTENERS
   leftArrow.addEventListener("click", prevPage);
   rightArrow.addEventListener("click", nextPage);
   resetButton.addEventListener("click", resetCurrentPage);
@@ -32,15 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
   navigationDots.forEach((dot) => {
     dot.addEventListener("click", () => {
       const pageNumber = parseInt(dot.getAttribute("data-page"));
-      // ChatGPT: Clicking on a navigation dot to jump to a specific page 
       switchPage(pageNumber);
     });
   });
 
-  // this part - starts with page 1
   initializePage1();
-
-  // Theme setting for page1
   const firstPage = document.querySelector("#slider .page:nth-child(1)");
   if (taskStates.themes[0] === "dark") {
     firstPage.classList.add("bg-dark", "text-white");
@@ -48,14 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
     firstPage.classList.add("bg-light", "text-dark");
   }
 
-  // Add new pages 
   initializeAddNewPages();
 
-  // ohmygodcheckup @CHECKUPBTTN
-  const checkUpModalEl = document.getElementById("checkUpModal");
-  checkUpModalEl.addEventListener("show.bs.modal", updateCheckUpModal);
-
-/// @FUNCTIONS START HERE
   function initializePage1() {
     const toggleSwitch1 = document.getElementById("toggle-switch1");
     const labelBtn1 = document.getElementById("label-btn1");
@@ -71,20 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
     allPages.forEach((page, index) => {
       if (index > 0) {
         const overlay = page.querySelector(".overlay");
-        // ChatGPT: Transforming a page from "Add New" into the input-page
         overlay?.addEventListener("click", () => transformPage(index + 1));
       }
     });
   }
-
-
-  //CHAT GPT LIST - make sure everything is here 
-
-  // 1) Restrict toggle if no label/proof (canToggle), show alert if conditions not met
-  // 2) Automatically toggle off once requirements (label & proof) are met (maybeAutoToggle)
-  // 3) Manage full light/dark mode changes and timestamp on proof upload
-  // 4) Clickable tasks in check-up to go to a specific page
-  
 
   function getLabel(page) {
     const display = document.getElementById(`label-display${page}`);
@@ -95,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function canToggle(page) {
+    // The user can only toggle if they have labeled and uploaded proof OR if the switch has already been toggled down once.
+    // Once both are done, we do an automatic toggle. After that, user can freely toggle.
     const labelSet = taskStates.labels[page - 1] !== null;
     const proofSet = taskStates.proofs[page - 1] !== null;
     return labelSet && proofSet;
@@ -106,27 +86,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageElement = document.querySelector(`#slider .page:nth-child(${page})`);
     const giantTitle = pageElement.querySelector(".giant-title");
 
+    // If not forced and conditions not met:
     if (!force && !canToggle(page)) {
-      alert("Please label your task and upload proof first!");
+      alert("Please label your task and upload proof first! For the future you :) ");
       return;
     }
 
+    // Play toggle sound
     const audio = new Audio(
       "https://raw.githubusercontent.com/Guiyoung-Jeon/Open-source/main/light-switch-flip-272436.mp3"
     );
     audio.play();
 
+    // Check current theme
     const isCurrentlyDark = taskStates.themes[page - 1] === "dark";
     const newTheme = isCurrentlyDark ? "light" : "dark";
+
+    // Update theme state
     taskStates.themes[page - 1] = newTheme;
 
+    // Change the image and text
     toggleSwitch.src = newTheme === "dark" ? OFF_IMAGE_URL : ON_IMAGE_URL;
     toggleText.textContent =
       newTheme === "dark"
         ? "It's already off. Check for yourself."
         : "Just Flick it. And Take a snap!";
 
-    // ChatGPT: Handling full theme switch (Everything needs to change- bg/mode/fontcolor)
     if (newTheme === "dark") {
       pageElement.classList.add("bg-dark", "text-white");
       pageElement.classList.remove("bg-light", "text-dark");
@@ -147,7 +132,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const display = document.getElementById(`label-display${page}`);
     const button = document.getElementById(`label-btn${page}`);
 
-    if (!input || !display || !button) return;
+    if (!input || !display || !button) {
+      console.error("Label elements not found for page:", page);
+      return;
+    }
 
     if (input.value.trim() === "") {
       alert("Please enter a label.");
@@ -161,9 +149,9 @@ document.addEventListener("DOMContentLoaded", () => {
     display.classList.remove("d-none");
     display.textContent = input.value;
 
-    // ChatGPT: Editing labels by double-click < IOS vibes
     display.addEventListener("dblclick", () => editLabel(page));
 
+    // After setting label, check if we can auto-toggle
     maybeAutoToggle(page);
   }
 
@@ -172,7 +160,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const display = document.getElementById(`label-display${page}`);
     const button = document.getElementById(`label-btn${page}`);
 
-    if (!input || !display || !button) return;
+    if (!input || !display || !button) {
+      console.error("Label elements not found for page:", page);
+      return;
+    }
 
     input.classList.remove("d-none");
     button.classList.remove("d-none");
@@ -186,9 +177,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleProofClick(page) {
+    // If proof already exists, just show the proof preview
     if (taskStates.proofs[page - 1]) {
       showProofModal(page);
     } else {
+      // No proof yet, upload proof
       uploadProof(page);
     }
   }
@@ -213,10 +206,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const reader = new FileReader();
       reader.onload = () => {
+        // Store proof
         taskStates.proofs[page - 1] = reader.result;
         const currentDate = new Date();
-        
-        // ChatGPT: Applying timestamp when proof is uploaded
         taskStates.uploadDates[page - 1] = currentDate.toLocaleString();
 
         const proofBtn = document.getElementById(`proof-btn${page}`);
@@ -231,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         document.body.removeChild(input);
+        // After uploading proof, check if we can auto-toggle
         maybeAutoToggle(page);
       };
 
@@ -241,12 +234,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function maybeAutoToggle(page) {
+    // If both label and proof are done, and currently theme is light, auto toggle
     const labelDone = taskStates.labels[page - 1] !== null;
     const proofDone = taskStates.proofs[page - 1] !== null;
     const themeIsLight = taskStates.themes[page - 1] === "light";
 
-    // ChatGPT: Automatic switch - toggle when requirements are met 
     if (labelDone && proofDone && themeIsLight) {
+      // Auto toggle with force = true (skip checks)
       toggleSwitch(page, true);
     }
   }
@@ -261,16 +255,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     allPages[targetIndex].classList.remove("add-new-page");
     allPages[targetIndex].innerHTML = `
-      <h1 class="giant-title">Off.</h1>
-      <p id="toggle-text${page}">Just Flick it. And Take a snap!</p>
-      <img id="toggle-switch${page}" src="${ON_IMAGE_URL}" alt="Toggle Switch" class="toggle-switch">
-      <div class="label-input-wrapper my-3 d-flex justify-content-center align-items-center gap-2">
-        <input type="text" id="label${page}" class="form-control w-50" placeholder="Label your task">
-        <button class="btn btn-primary" id="label-btn${page}">OK</button>
-      </div>
-      <h1 id="label-display${page}" class="d-none"></h1>
-      <button class="btn btn-upload-proof mb-2" id="proof-btn${page}">Upload Your Proof</button>
-    `;
+    <h1 class="giant-title">Off.</h1>
+    <p id="toggle-text${page}">Just Flick it. And Take a snap!</p>
+    <img id="toggle-switch${page}" src="${ON_IMAGE_URL}" alt="Toggle Switch" class="toggle-switch">
+    <div class="label-input-wrapper my-3 d-flex justify-content-center align-items-center gap-2">
+      <input type="text" id="label${page}" class="form-control w-50" placeholder="Label your task">
+      <button class="btn btn-primary" id="label-btn${page}">OK</button>
+    </div>
+    <h1 id="label-display${page}" class="d-none"></h1>
+    <button class="btn btn-upload-proof mb-2" id="proof-btn${page}">Upload Your Proof</button>
+  `;
 
     const theme = taskStates.themes[targetIndex];
     const pageElement = document.querySelector(`#slider .page:nth-child(${targetIndex + 1})`);
@@ -286,12 +280,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(`label-btn${page}`).addEventListener("click", () => setLabel(page));
     document.getElementById(`proof-btn${page}`).addEventListener("click", () => handleProofClick(page));
 
-    // ChatGPT: Reset button only pg2-5
     resetButton.classList.remove("d-none");
   }
 
-  // @PAGES
-  
   function resetCurrentPage() {
     if (currentPage === 0) {
       alert("Page 1 cannot be reset.");
@@ -345,8 +336,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pageElement = document.querySelector(`#slider .page:nth-child(${pageNumber + 1})`);
     const giantTitle = pageElement.querySelector(".giant-title");
-    if (giantTitle) {
-      giantTitle.style.color = theme === "dark" ? "#fff" : "#000";
+    if (theme === "dark" && giantTitle) {
+      giantTitle.style.color = "#fff";
+    } else if (giantTitle) {
+      giantTitle.style.color = "#000";
     }
 
     if (pageNumber >= 1 && pageNumber <= 4) {
@@ -379,9 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return toggleSwitch.src === ON_IMAGE_URL;
   }
 
-// @CHECKUPMODALS
-  
-  
   function updateCheckUpModal() {
     const taskList = document.getElementById("task-list");
     taskList.innerHTML = "";
@@ -400,8 +390,6 @@ document.addEventListener("DOMContentLoaded", () => {
         labelSpan.textContent = label;
         labelSpan.style.cursor = "pointer";
         labelSpan.className = "text-primary";
-
-        // ChatGPT: Clicking on a task in the check-up takes user to that specific page
         labelSpan.onclick = () => {
           switchPage(i - 1);
           bootstrap.Modal.getInstance(document.getElementById("checkUpModal")).hide();
@@ -409,9 +397,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const statusBadge = document.createElement("span");
         const isOn = isSwitchOn(i);
-        
-        // ChatGPT: ON/OFF status displayed in checker bar - this took literally 10 hours 
-        
         statusBadge.className = `badge ${isOn ? "bg-danger" : "bg-success"}`;
         statusBadge.textContent = isOn ? "ON" : "OFF";
 
@@ -437,9 +422,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (taskList.children.length === 0) {
       const li = document.createElement("li");
       li.className = "list-group-item text-center text-muted";
-      li.textContent = "No labeled tasks yet. Add your labels first!";
+      li.textContent =
+        "No labeled tasks yet. Add your labels first!";
       taskList.appendChild(li);
     }
   }
 
+  const checkUpModalEl = document.getElementById("checkUpModal");
+  checkUpModalEl.addEventListener("show.bs.modal", updateCheckUpModal);
 });
