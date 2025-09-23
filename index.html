@@ -1,28 +1,21 @@
 <html lang="en">
-  
-  <!--HTML IS FINE--!>
-  <!-- final check finished 10:15 -->
-  
 <head>
-  <!-- OFF TITLE (should be giant/bold) -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OFF App</title>
-
-  <!--FONTS -->
+  <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     rel="stylesheet"   
   />
-  <link
+    <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body class="bg-light text-black">
-  <!-- HELP MODAL -->
+  <!-- Help Modal -->
   <div
     class="modal fade"
     id="helpModal"
@@ -33,7 +26,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-dark" id="helpModalLabel">How to use Off.</h5>
+          <h5 class="modal-title text-dark" id="helpModalLabel">How to use Off. </h5>
           <button
             type="button"
             class="btn-close"
@@ -42,9 +35,7 @@
           ></button>
         </div>
         <div class="modal-body text-dark">
-          This app helps you manage tasks and reduce anxiety by toggling devices or tasks on/off and uploading proof.<br><br>
-          Label your task > upload your proof > check your proof anytime!
-          <br> - - - - - - - -  <br> ★ Have Questions? email us @ off-staff@off.com ★
+          This app helps you manage tasks and reduce anxiety by toggling devices or tasks on/off and uploading proof.<br><br>Label your task > upload your proof > check your proof anytime!
         </div>
         <div class="modal-footer">
           <button
@@ -59,7 +50,7 @@
     </div>
   </div>
 
-  <!-- PREVIEW MODAL -->
+  <!-- Preview Modal -->
   <div
     class="modal fade"
     id="previewModal"
@@ -101,8 +92,7 @@
     </div>
   </div>
 
-  
-  <!-- CHECK-UP MODAL -->
+  <!-- Check Up Modal -->
   <div
     class="modal fade"
     id="checkUpModal"
@@ -123,10 +113,9 @@
         </div>
         <div class="modal-body">
           <ul class="list-group" id="task-list">
-            <!-- JS populated -->
-             <!--- *** CHAT GPT ZONE *** --->
+            <!-- Dynamically populated -->
           </ul>
-        </div> 
+        </div>
         <div class="modal-footer">
           <button
             type="button"
@@ -140,9 +129,9 @@
     </div>
   </div>
 
-  <!-- MAIN APP SECTION -->
+  <!-- Main App -->
   <div class="container text-center py-5 position-relative">
-    <!-- TOP BAR -->
+    <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <img
         src="https://github.com/Guiyoung-Jeon/Open-source/blob/main/gold-star-with-question-mark-question-icon-vector.png?raw=true"
@@ -151,21 +140,19 @@
         data-bs-toggle="modal"
         data-bs-target="#helpModal"
       />
-
       <!-- Check-Up Button -->
       <button id="status-button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#checkUpModal">
-        CHECK UP ♥︎
-      </button>
+  CHECK UP ♥︎
+</button>
     </div>
 
-    <!-- LEFT ARROW -->
+    <!-- Left Arrow -->
     <div id="left-arrow" class="arrow">&#8249;</div>
 
-    <!-- SLIDER WRAPPER --> 
+    <!-- Swipable Pages -->
     <div id="slider-wrapper">
       <div id="slider" class="d-flex">
-        
-        <!-- PAGE 1 (FIXED - DON'T TOUCH) -->
+        <!-- Page 1 (Predefined) -->
         <div class="page text-center">
           <h1 class="giant-title">Off.</h1>
           <p id="toggle-text1">Just Flick it. And Take a snap!</p>
@@ -176,22 +163,25 @@
             class="toggle-switch"
           />
           
-          <div class="label-input-wrapper my-3 d-flex justify-content-center align-items-center gap-2">
-            <input
-              type="text"
-              id="label1"
-              class="form-control w-50"
-              placeholder="Label your task"
-            />
-            <button class="btn btn-primary" id="label-btn1">GO</button>
-          </div>
-
+          
+          
+          
+        <div class="label-input-wrapper my-3 d-flex justify-content-center align-items-center gap-2">
+    <input
+        type="text"
+        id="label1"
+        class="form-control w-50"
+        placeholder="Label your task"
+    />
+    <button class="btn btn-primary" id="label-btn1">
+        GO
+    </button>
+</div>
           <h1 id="label-display1" class="d-none"></h1>
-          <button class="btn btn-upload-proof" id="proof-btn1">Upload Your Proof</button>
+<button class="btn btn-upload-proof" id="proof-btn1">Upload Your Proof</button>
         </div>
 
-        <!-- PAGE 2-5: "ADD NEW" PAGES -->
-        <!-- ChatGPT:MAXPAGES = 5. Page 1 is FIXED, Pages 2-5 start as "ADD NEW"  -->
+        <!-- Pages 2-5 - Add New -->
         <div class="page text-center add-new-page">
           <div class="overlay">
               <h1>Click Here to Add <span>New</span></h1>
@@ -212,16 +202,14 @@
               <h1>Click Here to Add <span>New</span></h1>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- RIGHT ARROW -->
+    <!-- Right Arrow -->
     <div id="right-arrow" class="arrow">&#8250;</div>
 
-    <!-- NAVIGATION DOTS -->
+    <!-- Navigation Dots -->
     <div id="navigation-dots" class="d-flex justify-content-center mt-3">
-      <!-- ChatGPT: Navigation dots for direct page navigation -->
       <span class="dot active" data-page="0"></span>
       <span class="dot" data-page="1"></span>
       <span class="dot" data-page="2"></span>
@@ -229,8 +217,7 @@
       <span class="dot" data-page="4"></span>
     </div>
 
-    <!----- RESET BUTTON ----->
-    <!-- ChatGPT: Reset button to reset a input page to "Add New" state -->
+    <!-- Reset Button (Initially Hidden, Only Visible on Pages 2-5 when Transformed) -->
     <button
       id="reset-button"
       class="btn btn-warning reset-button d-none"
@@ -240,9 +227,9 @@
     </button>
   </div>
 
-  <!-- BOOTSTRAP JS & CUSTOM JS -->
-  <!--- *** CHAT GPT ZONE *** --->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js" defer></script>
+  <script  src="script.js"  defer></script>
+
 </body>
 </html>
